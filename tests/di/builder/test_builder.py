@@ -55,26 +55,26 @@ def test_builder_manual():
     # Add initialized config value.
     # ---
     # By default option `export` in `add_values` is set,
-    # so this value will be visible
-    # when this module will be imported by another module.
+    # so this value will be visible in other modules
+    # that import this module.
     config_module.add_values(mod_config.config)
 
     # Lets create system module,
     # that will contain domain with connected concrete objects.
     system_module = builder.module_builder("system")
-    # Add `config_module` to `system_module` imported modules.
+    # Import `config_module` by `system_module`.
     system_module.imports(config_module)
     # Add factory for `AllCombinations`.
     # ---
-    # DI mechanism will try to call (create) this factory,
-    # injecting non-abstract arguments matching type annotations.
+    # DI mechanism will try to call this factory (create class instance),
+    # injecting into arguments objects, by type annotations matching.
     all_combinations_element = system_module.add_factory(mod_abstract.AllCombinations)
     # Add factory for concrete `ItertoolsGroupCombinationsGenerator`.
     system_module.add_factory(mod_impl.ItertoolsGroupCombinationsGenerator)
 
     # As an example mark that all `DataProvider` objects can be aggregated
-    # and injected into argument,
-    # where its type annotation refers to collection of `DataProvider`.
+    # and injected into argument, where its type annotation
+    # refers to any kind of `DataProvider` collection.
     builder.add_aggregation_type(DataProvider)
 
     # Add factories for `DataProvider` concretes.
@@ -83,7 +83,11 @@ def test_builder_manual():
         mod_plugins.NumberDataProvider,
     )
 
-    # This operation builds application instance.
+    # This operation builds application instance:
+    # - solves module dependency graph
+    # - solves in module dependency injection sub-graphs
+    # - initializes factories dependency injection chain
+    # - calls factories marked by `bootstrap` option
     instance = builder.build_instance()
     # This operation creates/gets `AllCombinations` provided
     # by automatic dependency injection mechanism.
@@ -112,49 +116,57 @@ def test_builder_scan():
     # defined as `VariableFilterSets.domain()`.
     # `VariableFilterSets.domain()` returns cascade, that contains:
     # - PublicVariableFilter - filters only public variables (by name)
-    # - OptionalAllVariableFilter - filters only variables in __all__ (if present)
+    # - OptionalAllVariableFilter - filters only variables in __all__ attribute
+    #   (if __all__ is present in module)
     # - DefinedVariableFilter - filters only variables with defined value
+    #   (variables marked only by annotation are iterated too)
     # ---
     # By default option `export` in `add_values` is set,
-    # so this value will be visible
-    # when this module will be imported by another module.
-    # add initialized config value
+    # so this value will be visible in other modules
+    # that import this module.
     config_module.scan_values(mod_config, VariableFilterSets.domain())
 
     # Lets create system module,
     # that will contain domain with connected concrete objects.
     system_module = builder.module_builder("system")
-    # Add `config_module` to `system_module` imported modules.
+    # Import `config_module` by `system_module`.
     system_module.imports(config_module)
     # Add factory for `AllCombinations`.
     # ---
-    # DI mechanism will try to call (create) this factory,
-    # injecting non-abstract arguments matching type annotations.
+    # DI mechanism will try to call this factory (create class instance),
+    # injecting into arguments objects, by type annotations matching.
     all_combinations_element = system_module.add_factory(mod_abstract.AllCombinations)
 
-    # As an example mark argument named `providers` of `AllCombinations` factory (class)
-    # to inject collection of object described in argument type annotation -
-    # in this case `DataProvider` concrete objects.
+    # As an example, mark argument named `providers` of `AllCombinations` factory
+    # to inject collection of objects described by argument type annotation -
+    # in this case aggregated all available `DataProvider` objects in scope.
     # ---
-    # In previous test we marked `DataProvider` can be aggregated into collections
-    # (if necessary) everywhere.
-    # In this case aggregation of `DataProvider` concrete objects can be used
-    # only in specified argument and specified factory case.
+    # In previous example we marked `DataProvider` objects can be aggregated
+    # into collection (if necessary) in every argument with `DataProvider`
+    # collection type annotation.
+    # In this case aggregation of `DataProvider` objects can be used
+    # only in specified argument and specified factory case
+    # (and proper type annotation).
     builder.add_aggregation_spec(all_combinations_element, "providers")
 
-    # Automatically add factories (classes) found in `mod_impl` and `mod_plugins`
-    # python modules.
+    # Automatically add factories (classes and functions)
+    # found in `mod_impl` and `mod_plugins` python modules.
     # To filter only public concretes `FactoryFilterSets.domain()` filter cascade
     # is used.
     # `FactoryFilterSets.domain()` returns cascade, that contains:
-    # - PublicFactoryFilter() - filters only public variables (by name)
-    # - InternalsOrAllFactoryFilter() - filters only module internals
+    # - PublicFactoryFilter - filters only public variables (by name)
+    # - InternalsOrAllFactoryFilter - filters only factories defined in this module
     #   or specified in __all__ module attribute
-    # - NonAbstractFactoryFilter() - filters only concretes, skips abstract classes;
-    #   by default duck typed abstract class check is used (raise NotImplementedError)
+    # - NonAbstractFactoryFilter - filters only concretes, skips abstract classes;
+    #   by default duck typed abstract class check is used,
+    #   that refers to methods/properties with `raise NotImplementedError` code
     system_module.scan_factories([mod_impl, mod_plugins], FactoryFilterSets.domain())
 
-    # This operation builds application instance.
+    # This operation builds application instance:
+    # - solves module dependency graph
+    # - solves in module dependency injection sub-graphs
+    # - initializes factories dependency injection chain
+    # - calls factories marked by `bootstrap` option
     instance = builder.build_instance()
     # This operation creates/gets `AllCombinations` provided
     # by automatic dependency injection mechanism.
