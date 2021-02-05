@@ -4,7 +4,7 @@ from typing import Any, Callable, Collection, Optional, Type, Union
 from di.builder.filters import FactoryFilterSets, VariableFilterSets
 from di.core.element import Element
 from di.core.injectors import FactoryInjector, ValueInjector
-from di.core.module.base import Module
+from di.core.module.base import Module, ModuleRelated
 from di.core.provide_strategies import LocalProvideStrategy, SingletonProvideStrategy
 from di.utils.inspection.module.factories import FactoryFilter, ModuleFactoriesInspector
 from di.utils.inspection.module.variables import (
@@ -29,7 +29,7 @@ class AppModuleBuilderEventHandler:
         pass
 
 
-class AppModuleBuilder:
+class AppModuleBuilder(ModuleRelated):
     def __init__(
         self,
         module: Module,

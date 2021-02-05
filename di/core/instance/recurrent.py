@@ -1,4 +1,4 @@
-from typing import Any, Dict, Iterable, List, Mapping, Sequence
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Type, Union
 
 from di.core.assignment.base import Assignment
 from di.core.compose.base import ComposedApplication
@@ -9,6 +9,8 @@ from di.core.instance.base import (
     ApplicationInstanceElementNotFound,
     ApplicationInstanceStateError,
 )
+from di.core.module.base import Module, ModuleRelated
+from di.core.navigator import ApplicationNavigator
 
 
 class _ComposedAppInspector:
@@ -73,9 +75,18 @@ class RecurrentProvideContext(ProvideContext):
 
 
 class RecurrentApplicationInstance(ApplicationInstance):
-    def __init__(self, ctx: RecurrentProvideContext):
-        self._bootstrap = False
+    def __init__(self, app: ComposedApplication, ctx: RecurrentProvideContext):
+        self._navigator = ApplicationNavigator(app.application)
         self._ctx = ctx
+
+    def values_by_type(
+        self,
+        type_: Type,
+        module: Optional[Union[Module, ModuleRelated, str]] = None,
+        strict: bool = True,
+    ) -> Iterable[Any]:
+        elements = self._navigator.by_type(type_=type_, module=module, strict=strict)
+        return [self.value_of(element) for element in elements]
 
     def value_of(self, element: Element):
         if not self._ctx.has(element):
@@ -90,7 +101,7 @@ class RecurrentApplicationInstanceBuilder(ApplicationInstanceBuilder):
     def build(self) -> RecurrentApplicationInstance:
         provide_context = self._provide_context()
         provide_context.boot()
-        return RecurrentApplicationInstance(provide_context)
+        return RecurrentApplicationInstance(app=self.app, ctx=provide_context)
 
     def _provide_context(self):
         return RecurrentProvideContext(self.app)

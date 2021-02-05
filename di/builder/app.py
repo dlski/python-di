@@ -6,7 +6,7 @@ from di.builder.assignment import (
     ArgDependencyCheck,
 )
 from di.builder.module import AppModuleBuilder
-from di.core.app import Application
+from di.core.app import Application, ApplicationRelated
 from di.core.compose.base import ComposedApplication
 from di.core.compose.composers import ApplicationComposer
 from di.core.element import Element
@@ -17,7 +17,7 @@ from di.core.module.base import Module
 from di.core.module.solvers import ModuleElementConsistencyCheck, ModuleImportSolver
 
 
-class AppBuilder:
+class AppBuilder(ApplicationRelated):
     def __init__(self, aggregation_types: Optional[Collection[Any]] = None):
         self.app = Application()
         self.assignment_factory_selector = AggregationAssignmentFactorySelector(

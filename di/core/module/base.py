@@ -25,6 +25,10 @@ class Module:
     __eq__ = object.__eq__
 
 
+class ModuleRelated:
+    module: Module
+
+
 class ModuleImportGraphEdge(DirectionalGraphEdge[Module]):
     __slots__ = "source", "target"
 

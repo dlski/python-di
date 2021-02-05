@@ -177,3 +177,29 @@ def test_builder_scan():
 
     # Check initialized application.
     _check_app_works(all_combinations)
+
+
+def test_builder_simplified():
+    """
+    Creates application using builder with automatic control of used components.
+    Simplified example.
+    """
+
+    # First of all create application builder.
+    builder = AppBuilder()
+
+    # Create main module and add application ingredients
+    main = builder.module_builder()
+    main.scan_values(mod_config)
+    main.scan_factories([mod_abstract, mod_impl, mod_plugins])
+
+    # Setup aggregation of `DataProvider` (see detailed examples above)
+    builder.add_aggregation_type(DataProvider)
+
+    # Create instance
+    instance = builder.build_instance()
+    # Get object value
+    (all_combinations,) = instance.values_by_type(mod_abstract.AllCombinations)
+
+    # Check initialized application.
+    _check_app_works(all_combinations)

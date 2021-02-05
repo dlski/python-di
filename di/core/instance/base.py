@@ -1,4 +1,7 @@
+from typing import Any, Iterable, Optional, Type, Union
+
 from di.core.element import Element
+from di.core.module.base import Module, ModuleRelated
 
 
 class ApplicationInstanceStateError(AssertionError):
@@ -16,6 +19,14 @@ class ApplicationInstanceElementNotFound(ApplicationInstanceError):
 
 
 class ApplicationInstance:
+    def values_by_type(
+        self,
+        type_: Type,
+        module: Optional[Union[Module, ModuleRelated, str]] = None,
+        strict: bool = True,
+    ) -> Iterable[Any]:
+        raise NotImplementedError
+
     def value_of(self, element: Element):
         raise NotImplementedError
 
