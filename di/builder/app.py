@@ -7,14 +7,11 @@ from di.builder.assignment import (
 )
 from di.builder.module import AppModuleBuilder
 from di.core.app import Application, ApplicationRelated
-from di.core.compose.base import ComposedApplication
-from di.core.compose.composers import ApplicationComposer
+from di.core.compose import ApplicationComposer, ComposedApplication
 from di.core.element import Element
-from di.core.injection.solvers import InjectionSolver
-from di.core.instance.base import ApplicationInstance
-from di.core.instance.recurrent import RecurrentApplicationInstanceBuilder
-from di.core.module.base import Module
-from di.core.module.solvers import ModuleElementConsistencyCheck, ModuleImportSolver
+from di.core.injection import InjectionSolver
+from di.core.instance import ApplicationInstance, RecurrentApplicationInstanceBuilder
+from di.core.module import Module, ModuleElementConsistencyCheck, ModuleImportSolver
 
 
 class AppBuilder(ApplicationRelated):

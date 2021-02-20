@@ -3,17 +3,15 @@ from typing import Mapping
 
 import pytest
 
-from di.core.compose.base import (
+from di.core.compose import (
+    ApplicationComposer,
     ApplicationComposerConsistencyError,
     ApplicationComposerModuleAssignmentError,
     ApplicationComposerModuleCyclicDependencyError,
     ApplicationComposerUnresolvedImportError,
 )
-from di.core.compose.composers import ApplicationComposer
-from di.core.injection.base import InjectionPlan
-from di.core.injection.solvers import InjectionSolver
-from di.core.module.base import Module
-from di.core.module.solvers import ModuleElementConsistencyCheck, ModuleImportSolver
+from di.core.injection import InjectionPlan, InjectionSolver
+from di.core.module import Module, ModuleElementConsistencyCheck, ModuleImportSolver
 from tests.di.core.conftest import AppGenerator
 
 

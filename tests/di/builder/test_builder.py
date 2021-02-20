@@ -2,8 +2,7 @@
 Test file with examples of DI usage.
 """
 
-from di.builder.app import AppBuilder
-from di.builder.filters import FactoryFilterSets, VariableFilterSets
+from di.builder import AppBuilder, FactoryFilterSets, VariableFilterSets
 from tests.di.builder import mod_abstract, mod_config, mod_impl, mod_plugins
 from tests.di.builder.mod_abstract import AllCombinations, DataProvider
 

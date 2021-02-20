@@ -1,16 +1,15 @@
 import pytest
 
-from di.core.compose.base import ComposedApplication
-from di.core.compose.composers import ApplicationComposer
+from di.core.compose import ApplicationComposer, ComposedApplication
 from di.core.element import Element
-from di.core.injection.solvers import InjectionSolver
-from di.core.instance.base import ApplicationInstanceElementNotFound
-from di.core.instance.recurrent import (
+from di.core.injection import InjectionSolver
+from di.core.instance import (
+    ApplicationInstanceElementNotFound,
     RecurrentApplicationInstance,
     RecurrentApplicationInstanceBuilder,
     RecurrentProvideContext,
 )
-from di.core.module.solvers import ModuleElementConsistencyCheck, ModuleImportSolver
+from di.core.module import ModuleElementConsistencyCheck, ModuleImportSolver
 from tests.di.core.conftest import AppGenerator
 
 

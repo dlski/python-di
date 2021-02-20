@@ -1,7 +1,7 @@
 from typing import Any, Iterable, Optional, Type, Union
 
 from di.core.element import Element
-from di.core.module.base import Module, ModuleRelated
+from di.core.module import Module, ModuleRelated
 
 
 class ApplicationInstanceStateError(AssertionError):

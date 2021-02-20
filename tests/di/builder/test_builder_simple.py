@@ -1,4 +1,4 @@
-from di.builder.app import AppBuilder
+from di.builder import AppBuilder
 from tests.di.builder import mod_simple, mod_simple_impl
 
 

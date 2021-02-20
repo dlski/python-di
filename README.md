@@ -44,7 +44,7 @@ Application concretes located in `mod_simple_impl.py`:
 ```py
 from typing import List
 
-from tests.di.builder.mod_simple import Repo
+from mod_simple import Repo
 
 
 class MockupRepo(Repo):
@@ -54,7 +54,7 @@ class MockupRepo(Repo):
 
 Automatic application construction:
 ```py
-from di.builder.app import AppBuilder
+from di.builder import AppBuilder
 import mod_simple, mod_simple_impl
 
 

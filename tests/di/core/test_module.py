@@ -1,9 +1,10 @@
 import pytest
 
 from di.core.element import Element
-from di.core.module.base import Module, ModuleElementConsistencyError
-from di.core.module.solvers import (
+from di.core.module import (
+    Module,
     ModuleElementConsistencyCheck,
+    ModuleElementConsistencyError,
     ModuleImportSolver,
     ModuleImportSolverError,
 )

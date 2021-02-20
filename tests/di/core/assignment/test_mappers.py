@@ -1,4 +1,4 @@
-from di.core.assignment.mappers import MixedIterableValuesMapper, SingleValuesMapper
+from di.core.assignment import MixedIterableValuesMapper, SingleValuesMapper
 
 
 def test_single_values_mapper():

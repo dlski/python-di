@@ -1,11 +1,11 @@
 from typing import Collection, Dict, Iterable, List, Optional, Set
 
-from di.core.assignment.base import (
+from di.core.assignment import (
     Assignment,
     AssignmentError,
     AssignmentFactorySelector,
+    DirectAssignmentFactorySelector,
 )
-from di.core.assignment.selectors import DirectAssignmentFactorySelector
 from di.core.element import Dependency, Element, Value
 from di.core.injection.base import (
     AbstractInjectionSolver,

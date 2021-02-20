@@ -2,14 +2,14 @@ from typing import Iterable, Sequence, Set
 
 import pytest
 
-from di.core.assignment.base import AssignmentFactory
-from di.core.assignment.selectors import DirectAssignmentFactorySelector
+from di.core.assignment import AssignmentFactory, DirectAssignmentFactorySelector
 from di.core.element import Dependency, Element
-from di.core.injection.base import (
+from di.core.injection import (
+    InjectionProblem,
+    InjectionSolver,
     InjectionSolverAssignmentError,
     InjectionSolverCyclicDependencyError,
 )
-from di.core.injection.solvers import InjectionProblem, InjectionSolver
 
 
 def test_injection_unsatisfied(

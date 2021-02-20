@@ -12,13 +12,13 @@ from di.core.compose.base import (
     ModuleInjectionPlan,
 )
 from di.core.element import Element
-from di.core.injection.base import (
+from di.core.injection import (
     AbstractInjectionSolver,
     InjectionProblem,
     InjectionSolverAssignmentError,
     InjectionSolverCyclicDependencyError,
 )
-from di.core.module.base import (
+from di.core.module import (
     AbstractModuleElementConsistencyCheck,
     AbstractModuleImportSolver,
     Module,

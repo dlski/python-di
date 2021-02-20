@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Collection, Sequence
 
-from di.core.assignment.base import Assignment
+from di.core.assignment import Assignment
 from di.core.element import Dependency, Element, Value
 from di.utils.graph import DirectionalGraph, DirectionalGraphEdge
 

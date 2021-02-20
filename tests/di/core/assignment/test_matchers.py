@@ -1,6 +1,6 @@
 from typing import Iterable, List
 
-from di.core.assignment.matchers import (
+from di.core.assignment import (
     DirectMatcher,
     TypeAggregationMatcher,
     TypeIterableMatcher,

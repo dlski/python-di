@@ -1,5 +1,4 @@
 import itertools
-import sys
 from abc import ABCMeta
 from collections import abc
 from typing import (

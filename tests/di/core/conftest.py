@@ -6,7 +6,7 @@ import pytest
 from di.core.app import Application
 from di.core.element import Element
 from di.core.injectors import FactoryInjector
-from di.core.module.base import Module
+from di.core.module import Module
 from di.core.provide_strategies import SingletonProvideStrategy
 
 

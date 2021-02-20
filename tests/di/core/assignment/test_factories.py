@@ -3,12 +3,12 @@ from typing import Collection, FrozenSet, Iterable, Optional, Sequence, Set, Tup
 
 import pytest
 
-from di.core.assignment.base import AssignmentError
-from di.core.assignment.factories import (
+from di.core.assignment import (
     AggregationAssignmentFactory,
+    AssignmentError,
     DirectAssignmentFactory,
+    MixedIterableValuesMapper,
 )
-from di.core.assignment.mappers import MixedIterableValuesMapper
 from di.core.element import (
     Dependency,
     Element,

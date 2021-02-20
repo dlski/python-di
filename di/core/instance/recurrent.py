@@ -1,7 +1,7 @@
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Type, Union
 
-from di.core.assignment.base import Assignment
-from di.core.compose.base import ComposedApplication
+from di.core.assignment import Assignment
+from di.core.compose import ComposedApplication
 from di.core.element import Element, ProvideContext
 from di.core.instance.base import (
     ApplicationInstance,
@@ -9,7 +9,7 @@ from di.core.instance.base import (
     ApplicationInstanceElementNotFound,
     ApplicationInstanceStateError,
 )
-from di.core.module.base import Module, ModuleRelated
+from di.core.module import Module, ModuleRelated
 from di.core.navigator import ApplicationNavigator
 
 

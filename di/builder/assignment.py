@@ -1,8 +1,9 @@
 from typing import Collection, List, Optional
 
-from di.core.assignment.base import AssignmentFactory, AssignmentFactorySelector
-from di.core.assignment.factories import (
+from di.core.assignment import (
     AggregationAssignmentFactory,
+    AssignmentFactory,
+    AssignmentFactorySelector,
     DirectAssignmentFactory,
 )
 from di.core.element import Dependency, Element

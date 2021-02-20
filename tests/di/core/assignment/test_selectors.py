@@ -1,5 +1,4 @@
-from di.core.assignment.factories import DirectAssignmentFactory
-from di.core.assignment.selectors import DirectAssignmentFactorySelector
+from di.core.assignment import DirectAssignmentFactory, DirectAssignmentFactorySelector
 
 
 def test_direct_assignment_factory_selector():

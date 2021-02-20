@@ -3,8 +3,8 @@ from typing import Sequence, Set
 
 from di.core.app import Application
 from di.core.element import Dependency, Element
-from di.core.injection.base import InjectionPlan
-from di.core.module.base import Module, ModuleImportPlan
+from di.core.injection import InjectionPlan
+from di.core.module import Module, ModuleImportPlan
 
 
 @dataclass
