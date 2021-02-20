@@ -1,41 +1,53 @@
 import inspect
 from functools import cached_property
-from typing import Any, Callable, Collection, Dict, Optional, Sequence, Set, Type
-
-from di.utils.inspection.typing import resolve_annotations
+from typing import (
+    Any,
+    Callable,
+    Collection,
+    Dict,
+    List,
+    Optional,
+    Sequence,
+    Type,
+    get_type_hints,
+)
 
 
 class FactoryInspection:
+    _kinds = (
+        inspect.Parameter.POSITIONAL_ONLY,
+        inspect.Parameter.POSITIONAL_OR_KEYWORD,
+        inspect.Parameter.KEYWORD_ONLY,
+    )
+
     def __init__(self, _factory: Callable):
         self._factory = _factory
         self._factory_module = getattr(self._factory, "__module__", None)
-        self._arg_spec = inspect.getfullargspec(_factory)
+        self._signature = inspect.signature(_factory)
+        self._parameters: List[inspect.Parameter] = [
+            *self._signature.parameters.values()
+        ]
+        self._annotations = get_type_hints(
+            _factory.__init__ if isinstance(_factory, type) else _factory
+        )
 
     @cached_property
     def optional_args(self) -> Collection[str]:
-        optional_args: Set[str] = set()
-        if self._arg_spec.defaults:
-            defaults_count = len(self._arg_spec.defaults)
-            optional_args.update(
-                self._arg_spec.args[-defaults_count:],
-            )
-        if self._arg_spec.kwonlydefaults:
-            optional_args.update(self._arg_spec.kwonlydefaults)
-        return optional_args
+        return {
+            param.name
+            for param in self._parameters
+            if param.default is not inspect.Parameter.empty
+        }
 
     @cached_property
     def args(self) -> Sequence[str]:
-        if isinstance(self._factory, type):
-            arg_offset = 1
-        else:
-            arg_offset = 0
-        return self._arg_spec.args[arg_offset:] + self._arg_spec.kwonlyargs
+        return [param.name for param in self._parameters if param.kind in self._kinds]
 
     @cached_property
     def args_annotations(self):
         return {
             key: value_type
-            for key, value_type in self.annotations.items()
+            for key, value_type in self._annotations.items()
             if key != "return"
         }
 
@@ -43,8 +55,8 @@ class FactoryInspection:
     def return_type(self) -> Optional[Type[Any]]:
         if isinstance(self._factory, type):
             return self._factory
-        return self.annotations.get("return")
+        return self._annotations.get("return")
 
     @cached_property
     def annotations(self) -> Dict[str, Type[Any]]:
-        return resolve_annotations(self._arg_spec.annotations, self._factory_module)
+        return self._annotations
