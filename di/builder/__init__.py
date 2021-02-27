@@ -6,7 +6,7 @@ from di.builder.assignment import (
     DependencyCheck,
 )
 from di.builder.filters import FactoryFilterSets, VariableFilterSets
-from di.builder.module import AppModuleBuilder, AppModuleBuilderEventHandler
+from di.builder.module import AppModuleBuilder
 
 __all__ = [
     # app
@@ -21,5 +21,4 @@ __all__ = [
     "VariableFilterSets",
     # module
     "AppModuleBuilder",
-    "AppModuleBuilderEventHandler",
 ]

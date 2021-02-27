@@ -146,7 +146,7 @@ def test_builder_scan():
     # In this case aggregation of `DataProvider` objects can be used
     # only in specified argument and specified factory case
     # (and proper type annotation).
-    builder.add_aggregation_spec(all_combinations_element, "providers")
+    builder.add_aggregation_arg(all_combinations_element, "providers")
 
     # Automatically add factories (classes and functions)
     # found in `mod_impl` and `mod_plugins` python modules.

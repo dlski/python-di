@@ -1,5 +1,5 @@
 import inspect
-from typing import Any, Callable, Collection, Optional, Type, Union
+from typing import Any, Callable, Collection, Iterable, Optional, Type, Union
 
 from di.builder.filters import FactoryFilterSets, VariableFilterSets
 from di.core.element import Element
@@ -16,47 +16,70 @@ from di.utils.inspection.module.variables import (
 def _python_modules(python_modules: Union[Any, Collection[Any]]):
     if inspect.ismodule(python_modules):
         yield python_modules
-        return
-    for python_module in python_modules:
-        assert inspect.ismodule(
-            python_module
-        ), f"Object {python_module} is not python module"
-        yield python_module
+    elif isinstance(python_modules, Collection):
+        for python_module in python_modules:
+            if not inspect.ismodule(python_module):
+                raise ValueError(f"Object {python_module} is not python module")
+            yield python_module
+    else:
+        raise ValueError(
+            f"Expected python module or python module collection, "
+            f"but got: {python_modules!r}"
+        )
 
 
-class AppModuleBuilderEventHandler:
-    def element_added(self, module: Module, element: Element):
-        pass
+def _extract_module(module: Union[Module, ModuleRelated]):
+    if isinstance(module, ModuleRelated):
+        module = module.module
+    if not isinstance(module, Module):
+        raise ValueError(f"expected module but got: {module!r}")
+    return module
+
+
+def _extract_modules(
+    modules: Collection[Union[Module, ModuleRelated]]
+) -> Iterable[Module]:
+    for module in modules:
+        yield _extract_module(module)
 
 
 class AppModuleBuilder(ModuleRelated):
     def __init__(
         self,
         module: Module,
-        event_handlers: Optional[Collection[AppModuleBuilderEventHandler]] = None,
     ):
         self.module = module
-        self.event_handlers = event_handlers or []
 
     def imports(
         self,
-        *modules: Union[Module, "AppModuleBuilder"],
-        reexport: Union[bool, Collection[Module]] = False,
+        *modules: Union[Module, ModuleRelated],
+        reexport: Union[bool, Collection[Union[Module, ModuleRelated]]] = False,
     ):
-        if reexport is True:
-            reexport_modules = set(modules)
-        elif not reexport:
-            reexport_modules = ()
-        else:
-            reexport_modules = set(reexport)
+        modules = tuple(_extract_modules(modules))
+        reexport_modules = self._extract_or_reuse(reexport, modules)
 
         for module in modules:
-            if isinstance(module, AppModuleBuilder):
-                module = module.module
             self.module.imports.add(module)
             if module in reexport_modules:
                 for element in module.exports:
                     self.module.exports.add(element)
+
+    @staticmethod
+    def _extract_or_reuse(
+        option: Union[bool, Collection[Union[Module, ModuleRelated]]],
+        reuse: Collection[Module],
+    ) -> Collection[Module]:
+        if option is True:
+            return set(reuse)
+        elif not option:
+            return ()
+        elif isinstance(option, Collection):
+            return set(_extract_modules(option))
+        else:
+            raise ValueError(
+                f"expected bool or module / module related collection, "
+                f"but got: {option!r}"
+            )
 
     def scan_factories(
         self,
@@ -174,6 +197,4 @@ class AppModuleBuilder(ModuleRelated):
             self.module.exports.add(element)
         if bootstrap:
             self.module.bootstrap.add(element)
-        for event_handler in self.event_handlers:
-            event_handler.element_added(self.module, element)
         return element
