@@ -18,11 +18,10 @@ def test_injection_unsatisfied(
     imports = unsatisfied_elements[:1]
     elements = unsatisfied_elements[1:]
     solver = InjectionSolver()
-    try:
+    with pytest.raises(InjectionSolverAssignmentError) as result:
         solver.solve(InjectionProblem(imports=imports, elements=elements))
-        pytest.fail(f"{InjectionSolverAssignmentError.__name__} not raised")
-    except InjectionSolverAssignmentError as error:
-        assert error.dependency.arg == "x"
+    error = result.value
+    assert error.dependency.arg == "x"
 
 
 def test_injection_cycle(

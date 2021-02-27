@@ -63,21 +63,21 @@ def test_compose_unresolved_import(
 def test_compose_missing_assignment(
     app_generator: AppGenerator, composer: ApplicationComposer
 ):
-    try:
+    with pytest.raises(ApplicationComposerModuleAssignmentError) as result:
         composer.compose(app_generator.missing_assignment_app)
         pytest.fail("Exception not thrown")
-    except ApplicationComposerModuleAssignmentError as error:
-        assert error.module is app_generator.a_ma_module
-        assert error.dependency.arg == "a1"
-        assert error.dependency.type
-        assert error.dependency.type.__name__ == "A1"
+    error = result.value
+    assert error.module is app_generator.a_ma_module
+    assert error.dependency.arg == "a1"
+    assert error.dependency.type
+    assert error.dependency.type.__name__ == "A1"
 
 
 def test_cyclic_dependency(app_generator: AppGenerator, composer: ApplicationComposer):
-    try:
+    with pytest.raises(ApplicationComposerModuleCyclicDependencyError) as result:
         composer.compose(app_generator.cyclic_dependency_app)
-    except ApplicationComposerModuleCyclicDependencyError as error:
-        assert error.module == app_generator.b_cd_module
+    error = result.value
+    assert error.module == app_generator.b_cd_module
 
 
 def test_bootstrap_sequence(app_generator: AppGenerator, composer: ApplicationComposer):
