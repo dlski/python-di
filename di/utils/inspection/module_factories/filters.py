@@ -1,18 +1,9 @@
 import dataclasses
-import inspect
 from types import ModuleType
-from typing import Any, Callable, Collection, Iterable, Tuple, Type, Union
+from typing import Collection, Iterable, Type, Union
 
 from di.utils.inspection.abstract import AbstractInspector
-
-FactoryItem = Tuple[str, Any]
-
-
-class FactoryFilter:
-    def filter(
-        self, module: ModuleType, items: Iterable[FactoryItem]
-    ) -> Iterable[FactoryItem]:
-        raise NotImplementedError
+from di.utils.inspection.module_factories.base import FactoryFilter, FactoryItem
 
 
 class AllFactoryFilter(FactoryFilter):
@@ -90,48 +81,3 @@ class NonTypeFactoryFilter(FactoryFilter):
             if isinstance(obj, type) and issubclass(obj, self.types):
                 continue
             yield name, obj
-
-
-class FactoryFilterCascade:
-    def __init__(self, filters: Collection[FactoryFilter]):
-        self.filters = filters
-
-    def apply(self, module: ModuleType, items: Iterable[FactoryItem]):
-        for filter_ in self.filters:
-            items = [*filter_.filter(module, items)]
-        return items
-
-
-class ModuleFactoriesInspector:
-    def __init__(self, module, filters: Collection[FactoryFilter]):
-        assert inspect.ismodule(module)
-        self.module = module
-        self.filter_cascade = FactoryFilterCascade(filters)
-
-    def all_factories(self):
-        return [*self.all_classes(), *self.all_functions()]
-
-    def factories(self):
-        return [*self.classes(), *self.functions()]
-
-    def functions(self) -> Collection[Tuple[str, Callable]]:
-        items = self.all_functions()
-        return self.filter_cascade.apply(self.module, items)
-
-    def all_functions(self) -> Collection[Tuple[str, Callable]]:
-        return [
-            (name, obj)
-            for name, obj in self.module.__dict__.items()
-            if inspect.isfunction(obj)
-        ]
-
-    def classes(self) -> Collection[Tuple[str, Type]]:
-        items = self.all_classes()
-        return self.filter_cascade.apply(self.module, items)
-
-    def all_classes(self) -> Collection[Tuple[str, Type]]:
-        return [
-            (name, obj)
-            for name, obj in self.module.__dict__.items()
-            if isinstance(obj, type)
-        ]

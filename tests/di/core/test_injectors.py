@@ -1,5 +1,4 @@
 from di.core.injectors import FactoryInjector, ValueInjector
-from di.utils.resource import ModuleObjectRef
 
 
 class X:
@@ -35,7 +34,6 @@ def _functional_test_factory_injector(provider: FactoryInjector):
 def test_type_factory_injector():
     injector = FactoryInjector(Y)
 
-    assert injector.ref == ModuleObjectRef.from_obj(Y)
     _functional_test_factory_injector(injector)
 
 
@@ -53,7 +51,6 @@ def test_value_injector():
     x = X()
     target_value_injector = ValueInjector(x)
     assert target_value_injector() == x
-    assert target_value_injector.ref == ModuleObjectRef.from_obj(X)
 
     result = target_value_injector.result()
     assert result

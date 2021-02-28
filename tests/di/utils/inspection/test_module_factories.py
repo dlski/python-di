@@ -1,6 +1,6 @@
 from typing import Collection
 
-from di.utils.inspection.module.factories import (
+from di.utils.inspection.module_factories import (
     AllFactoryFilter,
     FactoryItem,
     InternalsFactoryFilter,
@@ -24,68 +24,59 @@ def _names(factories: Collection[FactoryItem]):
 
 
 def test_module_factories_all_classes():
-    inspector = ModuleFactoriesInspector(module_empty_annotations, [])
+    inspector = ModuleFactoriesInspector([])
     assert {
         "ABC",
         "combinations",
         "_ProtectedClass",
         "MyClass",
-    } == _names(inspector.all_classes())
+    } == _names(inspector.all_types(module_empty_annotations))
 
 
 def test_modules_all_functions():
-    inspector = ModuleFactoriesInspector(module_empty_annotations, [])
+    inspector = ModuleFactoriesInspector([])
     assert {
         "abstractmethod",
         "gather",
         "_protected_fun",
         "my_fun",
-    } == _names(inspector.all_functions())
+    } == _names(inspector.all_functions(module_empty_annotations))
 
 
 def test_module_factories_all_factory_filter():
-    inspector = ModuleFactoriesInspector(module_all_present, [AllFactoryFilter()])
+    inspector = ModuleFactoriesInspector([AllFactoryFilter()])
     assert {
         "OtherClass",
         "my_fun2",
-    } == _names(inspector.factories())
+    } == _names(inspector.filtered_factories(module_all_present))
 
 
 def test_module_internals_factories_filter():
-    inspector = ModuleFactoriesInspector(
-        module_empty_annotations, [InternalsFactoryFilter()]
-    )
+    inspector = ModuleFactoriesInspector([InternalsFactoryFilter()])
     assert {
         "_ProtectedClass",
         "MyClass",
         "_protected_fun",
         "my_fun",
-    } == _names(inspector.factories())
+    } == _names(inspector.filtered_factories(module_empty_annotations))
 
 
 def test_module_internals_or_all_filter():
-    inspector = ModuleFactoriesInspector(
-        module_all_present, [InternalsOrAllFactoryFilter()]
-    )
+    inspector = ModuleFactoriesInspector([InternalsOrAllFactoryFilter()])
     assert {
         "OtherClass",
         "my_fun2",
-    } == _names(inspector.factories())
-    inspector = ModuleFactoriesInspector(
-        module_empty_annotations, [InternalsOrAllFactoryFilter()]
-    )
+    } == _names(inspector.filtered_factories(module_all_present))
     assert {
         "_ProtectedClass",
         "MyClass",
         "_protected_fun",
         "my_fun",
-    } == _names(inspector.factories())
+    } == _names(inspector.filtered_factories(module_empty_annotations))
 
 
 def test_module_public_filter():
-    inspector = ModuleFactoriesInspector(
-        module_empty_annotations, [PublicFactoryFilter()]
-    )
+    inspector = ModuleFactoriesInspector([PublicFactoryFilter()])
     assert {
         "ABC",
         "abstractmethod",
@@ -93,13 +84,11 @@ def test_module_public_filter():
         "gather",
         "MyClass",
         "my_fun",
-    } == _names(inspector.factories())
+    } == _names(inspector.filtered_factories(module_empty_annotations))
 
 
 def test_module_non_abstract_filter():
-    inspector = ModuleFactoriesInspector(
-        module_empty_annotations, [NonAbstractFactoryFilter()]
-    )
+    inspector = ModuleFactoriesInspector([NonAbstractFactoryFilter()])
     assert {
         "ABC",
         "abstractmethod",
@@ -108,13 +97,11 @@ def test_module_non_abstract_filter():
         "MyClass",
         "_protected_fun",
         "my_fun",
-    } == _names(inspector.factories())
+    } == _names(inspector.filtered_factories(module_empty_annotations))
 
 
 def test_module_non_abstract_canonical_filter():
-    inspector = ModuleFactoriesInspector(
-        module_abstract, [NonAbstractFactoryFilter(duck_typing=False)]
-    )
+    inspector = ModuleFactoriesInspector([NonAbstractFactoryFilter(duck_typing=False)])
     assert {
         "ABC",
         "abstractmethod",
@@ -129,13 +116,11 @@ def test_module_non_abstract_canonical_filter():
         "abstract_fn",
         "normal_async_fn",
         "abstract_async_fn",
-    } == _names(inspector.factories())
+    } == _names(inspector.filtered_factories(module_abstract))
 
 
 def test_module_non_abstract_duck_filter():
-    inspector = ModuleFactoriesInspector(
-        module_abstract, [NonAbstractFactoryFilter(duck_typing=True)]
-    )
+    inspector = ModuleFactoriesInspector([NonAbstractFactoryFilter(duck_typing=True)])
     assert {
         "ABC",
         "abstractmethod",
@@ -143,23 +128,23 @@ def test_module_non_abstract_duck_filter():
         "ImplementedAbstracts",
         "normal_fn",
         "normal_async_fn",
-    } == _names(inspector.factories())
+    } == _names(inspector.filtered_factories(module_abstract))
 
 
 def test_module_non_dataclass_filter():
-    inspector = ModuleFactoriesInspector(module_model, [NonDataclassFactoryFilter()])
+    inspector = ModuleFactoriesInspector([NonDataclassFactoryFilter()])
     assert {
         "dataclass",
         "NormalClass",
         "ExtendedNormalClass",
-    } == _names(inspector.factories())
+    } == _names(inspector.filtered_factories(module_model))
 
 
 def test_module_non_model_filter():
     inspector = ModuleFactoriesInspector(
-        module_model, [NonTypeFactoryFilter(types=module_model.NormalClass)]
+        [NonTypeFactoryFilter(types=module_model.NormalClass)]
     )
     assert {
         "dataclass",
         "DataClass",
-    } == _names(inspector.factories())
+    } == _names(inspector.filtered_factories(module_model))

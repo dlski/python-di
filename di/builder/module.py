@@ -6,8 +6,8 @@ from di.core.element import Element
 from di.core.injectors import FactoryInjector, ValueInjector
 from di.core.module.base import Module, ModuleRelated
 from di.core.provide_strategies import LocalProvideStrategy, SingletonProvideStrategy
-from di.utils.inspection.module.factories import FactoryFilter, ModuleFactoriesInspector
-from di.utils.inspection.module.variables import (
+from di.utils.inspection.module_factories import FactoryFilter, ModuleFactoriesInspector
+from di.utils.inspection.module_variables import (
     ModuleVariablesInspector,
     VariableFilter,
 )
@@ -94,7 +94,7 @@ class AppModuleBuilder(ModuleRelated):
         elements = []
         for python_module in _python_modules(python_modules):
             for filter_set in filter_sets:
-                inspector = ModuleFactoriesInspector(python_module, filter_set)
+                inspector = ModuleFactoriesInspector(filter_set)
                 elements.extend(
                     [
                         self.add_factory(
@@ -104,7 +104,7 @@ class AppModuleBuilder(ModuleRelated):
                             export=export,
                             bootstrap=bootstrap,
                         )
-                        for name, factory in inspector.factories()
+                        for name, factory in inspector.filtered_factories(python_module)
                     ]
                 )
         return elements
@@ -157,11 +157,11 @@ class AppModuleBuilder(ModuleRelated):
         elements = []
         for python_module in _python_modules(python_modules):
             for filter_set in filter_sets:
-                inspector = ModuleVariablesInspector(python_module, filter_set)
+                inspector = ModuleVariablesInspector(filter_set)
                 elements.extend(
                     [
                         self.add_value(var.value, label=var.name, export=export)
-                        for var in inspector.variables()
+                        for var in inspector.variables(python_module)
                     ]
                 )
         return elements

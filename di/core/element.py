@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from typing import Any, Iterable, MutableMapping, Optional, Type
 
-from di.utils.resource import ModuleObjectKeyRef, ModuleObjectRef
-
 
 @dataclass
 class InjectorDependency:
@@ -19,10 +17,6 @@ class InjectionResult:
 class Injector:
     def dependencies(self) -> Iterable[InjectorDependency]:
         return ()
-
-    @property
-    def ref(self) -> Optional[ModuleObjectRef]:
-        return None
 
     def result(self) -> Optional[InjectionResult]:
         return None
@@ -49,8 +43,6 @@ class Value(InjectionResult, ElementSourced):
 
 @dataclass
 class Dependency(InjectorDependency, ElementSourced):
-    ref: Optional[ModuleObjectKeyRef] = None
-
     def __hash__(self):
         return hash((self.source, self.arg))
 
@@ -65,18 +57,12 @@ class Element:
     strategy: "ProvideStrategy"
     label: Optional[str] = None
 
-    @property
-    def ref(self):
-        return self.injector.ref
-
     def dependencies(self) -> Iterable[Dependency]:
-        ref = self.injector.ref
         return tuple(
             Dependency(
                 source=self,
                 arg=dep.arg,
                 type=dep.type,
-                ref=ref and ref.sub(dep.arg),
                 mandatory=dep.mandatory,
             )
             for dep in self.injector.dependencies()

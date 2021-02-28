@@ -1,12 +1,12 @@
 from typing import Collection, Optional
 
-from di.utils.inspection.module.factories import (
+from di.utils.inspection.module_factories import (
     FactoryFilter,
     InternalsOrAllFactoryFilter,
     NonAbstractFactoryFilter,
     PublicFactoryFilter,
 )
-from di.utils.inspection.module.variables import (
+from di.utils.inspection.module_variables import (
     DefinedVariableFilter,
     OptionalAllVariableFilter,
     PublicVariableFilter,

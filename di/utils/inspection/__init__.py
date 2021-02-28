@@ -1,4 +1,4 @@
-from di.utils.inspection.factory_inspection import FactoryInspection
+from di.utils.inspection.factory import FactoryInspection
 from di.utils.inspection.typing import (
     aggregated_type,
     aggregation_type_factory,

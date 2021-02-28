@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "python-di"
-version = "0.3.0"
+version = "0.4.0"
 description = "Fully automatic dependency injection for python"
 authors = ["Damian Łukawski <damian@lukawscy.pl>"]
 license = "MIT"
