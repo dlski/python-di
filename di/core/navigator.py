@@ -1,5 +1,4 @@
 from collections import defaultdict
-from functools import cached_property
 from typing import (
     Callable,
     Collection,
@@ -15,6 +14,7 @@ from typing import (
 from di.core.app import Application, ApplicationRelated
 from di.core.element import Element
 from di.core.module.base import Module, ModuleRelated
+from di.utils.compat import cached_property
 from di.utils.inspection import is_base_type
 
 

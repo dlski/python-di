@@ -1,4 +1,3 @@
-from functools import cached_property
 from typing import Iterable, Sequence
 
 import pytest
@@ -8,6 +7,7 @@ from di.core.element import Element
 from di.core.injectors import FactoryInjector
 from di.core.module import Module
 from di.core.provide_strategies import SingletonProvideStrategy
+from di.utils.compat import cached_property
 
 
 class X:

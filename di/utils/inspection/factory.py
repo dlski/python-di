@@ -1,5 +1,4 @@
 import inspect
-from functools import cached_property
 from typing import (
     Any,
     Callable,
@@ -11,6 +10,8 @@ from typing import (
     Type,
     get_type_hints,
 )
+
+from di.utils.compat import cached_property
 
 
 class FactoryInspection:

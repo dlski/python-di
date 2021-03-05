@@ -38,7 +38,8 @@ class _InjectionSolverCache:
 
     def values(self, *elements: Element) -> Iterable[Value]:
         for element in elements:
-            if value := self.value(element):
+            value = self.value(element)
+            if value:
                 yield value
 
     def value(self, element: Element) -> Value:
