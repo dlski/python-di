@@ -4,6 +4,9 @@ version = "0.4.2"
 description = "Fully automatic dependency injection for python"
 authors = ["Damian Łukawski <damian@lukawscy.pl>"]
 license = "MIT"
+packages = [
+    { include = "di" },
+]
 
 [tool.poetry.dependencies]
 python = ">=3.7 <3.10"
