@@ -5,9 +5,9 @@ from di.core.element import Element
 from di.core.injection import InjectionSolver
 from di.core.instance import (
     ApplicationInstanceElementNotFound,
-    RecurrentApplicationInstance,
-    RecurrentApplicationInstanceBuilder,
-    RecurrentProvideContext,
+    RecursiveApplicationInstance,
+    RecursiveApplicationInstanceBuilder,
+    RecursiveProvideContext,
 )
 from di.core.module import ModuleElementConsistencyCheck, ModuleImportSolver
 from tests.di.core.conftest import AppGenerator
@@ -29,8 +29,8 @@ def composed(
     return composer.compose(app_generator.valid_app)
 
 
-def _build_instance(composed: ComposedApplication) -> RecurrentApplicationInstance:
-    return RecurrentApplicationInstanceBuilder(composed).build()
+def _build_instance(composed: ComposedApplication) -> RecursiveApplicationInstance:
+    return RecursiveApplicationInstanceBuilder(composed).build()
 
 
 def test_instance(composed: ComposedApplication, app_generator: AppGenerator):
@@ -60,7 +60,7 @@ def test_instance_not_found(composed: ComposedApplication, app_generator: AppGen
         instance.value_of(bce)
 
 
-class _RecurrentProvideContext(RecurrentProvideContext):
+class _RecursiveProvideContext(RecursiveProvideContext):
     _call_stack = []
     primary_sequence = []
 
@@ -74,17 +74,17 @@ class _RecurrentProvideContext(RecurrentProvideContext):
             self._call_stack.pop()
 
 
-class _RecurrentApplicationInstanceBuilder(RecurrentApplicationInstanceBuilder):
+class _RecursiveApplicationInstanceBuilder(RecursiveApplicationInstanceBuilder):
     def _provide_context(self):
-        return _RecurrentProvideContext(self.app)
+        return _RecursiveProvideContext(self.app)
 
 
 def test_instance_bootstrap(app_generator: AppGenerator, composer: ApplicationComposer):
     composed = composer.compose(app_generator.bootstrap_app)
-    _RecurrentApplicationInstanceBuilder(composed).build()
+    _RecursiveApplicationInstanceBuilder(composed).build()
     expected_sequence = []
     for module_step in composed.bootstrap_steps:
         for step in module_step.steps:
             expected_sequence.extend(step)
-    produced_sequence = _RecurrentProvideContext.primary_sequence
+    produced_sequence = _RecursiveProvideContext.primary_sequence
     assert expected_sequence == produced_sequence

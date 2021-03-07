@@ -5,10 +5,10 @@ from di.core.instance.base import (
     ApplicationInstanceError,
     ApplicationInstanceStateError,
 )
-from di.core.instance.recurrent import (
-    RecurrentApplicationInstance,
-    RecurrentApplicationInstanceBuilder,
-    RecurrentProvideContext,
+from di.core.instance.recursive import (
+    RecursiveApplicationInstance,
+    RecursiveApplicationInstanceBuilder,
+    RecursiveProvideContext,
 )
 
 __all__ = [
@@ -19,7 +19,7 @@ __all__ = [
     "ApplicationInstanceError",
     "ApplicationInstanceStateError",
     # recurrent
-    "RecurrentApplicationInstance",
-    "RecurrentApplicationInstanceBuilder",
-    "RecurrentProvideContext",
+    "RecursiveApplicationInstance",
+    "RecursiveApplicationInstanceBuilder",
+    "RecursiveProvideContext",
 ]

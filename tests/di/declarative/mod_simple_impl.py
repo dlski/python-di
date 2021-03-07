@@ -1,6 +1,6 @@
 from typing import List
 
-from tests.di.builder.mod_simple import Repo
+from tests.di.declarative.mod_simple import Repo
 
 
 class MockupRepo(Repo):

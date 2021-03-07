@@ -4,7 +4,7 @@ Module containing implementations of concrete data providers
 
 from typing import Collection
 
-from tests.di.builder.mod_abstract import DataProvider
+from tests.di.declarative.mod_abstract import DataProvider
 
 
 class LetterDataProvider(DataProvider):

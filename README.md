@@ -54,28 +54,29 @@ class MockupRepo(Repo):
 
 Automatic application construction:
 ```py
-from di.builder import AppBuilder
+from di.declarative import DeclarativeApp, DeclarativeModule, scan_factories
 import mod_simple, mod_simple_impl
 
 
 def main():
-    # Create application builder
-    builder = AppBuilder()
+    # create app definition
+    app_def = DeclarativeApp(
+        DeclarativeModule(
+            # automatically add factories from `mod_simple` and `mod_simple_impl`
+            scan_factories(mod_simple, mod_simple_impl),
+        )
+    )
 
-    # Create main module and initialize by scraping defined factories
-    main = builder.module_builder()
-    main.scan_factories([mod_simple, mod_simple_impl])
+    # build app
+    instance = app_def.build_instance()
 
-    # Build app
-    instance = builder.build_instance()
-
-    # Get initialized `DomainAction` object
+    # get initialized `DomainAction` object
     action, = instance.values_by_type(mod_simple.DomainAction)
 
-    # Check app works
+    # check app works
     assert action.present() == "Data found: di, test"
 ```
 
 ## More examples
-More working examples are available in `tests/di/builder/`.
-Please see [tests/di/builder/test_builder.py](tests/di/builder/test_builder.py) for reference.
+More working examples are available in `tests/di/declarative/`.
+Please see [tests/di/declarative/test_build.py](tests/di/declarative/test_build.py) for reference.

@@ -5,7 +5,7 @@ for string collection - composite of elements returned by various data providers
 
 from typing import Collection, FrozenSet, List
 
-from tests.di.builder.mod_config import Config
+from tests.di.declarative.mod_config import Config
 
 
 class GroupCombinationsGenerator:

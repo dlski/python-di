@@ -42,7 +42,7 @@ class _ComposedAppInspector:
                 yield from step
 
 
-class RecurrentProvideContext(ProvideContext):
+class RecursiveProvideContext(ProvideContext):
     def __init__(self, app: ComposedApplication):
         self.global_state: Dict[Element, Any] = {}
         inspector = _ComposedAppInspector(app)
@@ -74,8 +74,8 @@ class RecurrentProvideContext(ProvideContext):
         return element in self._assignments
 
 
-class RecurrentApplicationInstance(ApplicationInstance):
-    def __init__(self, app: ComposedApplication, ctx: RecurrentProvideContext):
+class RecursiveApplicationInstance(ApplicationInstance):
+    def __init__(self, app: ComposedApplication, ctx: RecursiveProvideContext):
         self._navigator = ApplicationNavigator(app.application)
         self._ctx = ctx
 
@@ -94,14 +94,14 @@ class RecurrentApplicationInstance(ApplicationInstance):
         return self._ctx.provide(element)
 
 
-class RecurrentApplicationInstanceBuilder(ApplicationInstanceBuilder):
+class RecursiveApplicationInstanceBuilder(ApplicationInstanceBuilder):
     def __init__(self, app: ComposedApplication):
         self.app = app
 
-    def build(self) -> RecurrentApplicationInstance:
+    def build(self) -> RecursiveApplicationInstance:
         provide_context = self._provide_context()
         provide_context.boot()
-        return RecurrentApplicationInstance(app=self.app, ctx=provide_context)
+        return RecursiveApplicationInstance(app=self.app, ctx=provide_context)
 
     def _provide_context(self):
-        return RecurrentProvideContext(self.app)
+        return RecursiveProvideContext(self.app)

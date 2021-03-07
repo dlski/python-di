@@ -21,6 +21,17 @@ class Module:
         for module in self.imports:
             yield from module.exports
 
+    def recursive_imports(self) -> Set["Module"]:
+        visited = set()
+        to_visit = set(self.imports)
+        while to_visit:
+            next_ = to_visit.pop()
+            if next_ in visited:
+                continue
+            visited.add(next_)
+            to_visit.update(next_.imports)
+        return visited
+
     __hash__ = object.__hash__
     __eq__ = object.__eq__
 

@@ -5,7 +5,7 @@ Module containing concrete implementation of `GroupCombinationsGenerator`
 import itertools
 from typing import Collection, FrozenSet
 
-from tests.di.builder.mod_abstract import GroupCombinationsGenerator
+from tests.di.declarative.mod_abstract import GroupCombinationsGenerator
 
 
 class ItertoolsGroupCombinationsGenerator(GroupCombinationsGenerator):
