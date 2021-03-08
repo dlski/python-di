@@ -14,10 +14,18 @@ from typing import (
     Union,
 )
 
+
+def _builtins_values():
+    try:
+        return __builtins__.values()
+    except AttributeError:
+        return __builtins__.__dict__.values()
+
+
 _NoneType = type(None)
 BUILTIN_TYPES = {
     type_
-    for type_ in __builtins__.values()
+    for type_ in _builtins_values()
     if isinstance(type_, type) and not issubclass(type_, BaseException)
 }
 

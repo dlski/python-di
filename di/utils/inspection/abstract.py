@@ -61,11 +61,15 @@ class AbstractInspector:
 
     @classmethod
     def _is_abstract_hard_check(cls, obj):
-        closure_vars = inspect.getclosurevars(obj)
-        for value in closure_vars.builtins.values():
-            if value is NotImplementedError or value is NotImplemented:
-                break
-        else:
+        try:
+            closure_vars = inspect.getclosurevars(obj)
+            for value in closure_vars.builtins.values():
+                if value is NotImplementedError or value is NotImplemented:
+                    break
+            else:
+                return False
+        except AttributeError:
+            # can not determine - probably native or builtin code
             return False
         try:
             for instruction in dis.get_instructions(obj):
@@ -102,6 +106,7 @@ class AbstractInspector:
 
     @classmethod
     def _all_concrete_bases(cls, obj: Type) -> Iterable[Type]:
+        print(obj.mro())
         for clazz in obj.mro():
             if clazz in BUILTIN_TYPES:
                 continue

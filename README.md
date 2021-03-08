@@ -1,5 +1,5 @@
 # python-di
-Fully automatic dependency injection for python 3.7, 3.8, 3.9 using (not only) type annotations (type hints).
+Fully automatic dependency injection for python 3.7, 3.8, 3.9, pypy3 using (not only) argument annotations / type hints.
 
 Corresponds to clean architecture patterns and ideal for business applications created in DDD / Hexagonal architecture flavour.
 No external dependencies - uses only standard libraries.
