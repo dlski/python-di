@@ -5,6 +5,7 @@ Test file with examples of DI usage.
 from di.declarative import (
     DeclarativeApp,
     DeclarativeModule,
+    NameModuleImport,
     VariableFilterSets,
     add_factories,
     add_values,
@@ -170,6 +171,46 @@ def test_build_simplified():
     instance = app_def.build_instance()
     # This operation creates/gets `AllCombinations` provided
     # by automatic dependency injection mechanism.
+    (all_combinations,) = instance.values_by_type(mod_abstract.AllCombinations)
+
+    # Check initialized application.
+    _check_app_works(all_combinations)
+
+
+def test_build_globals():
+    """
+    Creates application using declarative with automatic control of used components.
+    Uses global flag and reexport in modules.
+    """
+
+    # Create application.
+    # NOTE: Modules with `global_=True` will be imported automatically
+    #       by other non global related modules.
+    # NOTE: Reexport flag will take all imported module exports
+    #       and appends to exports in current module.
+    #       Works like exported elements forwarding.
+    app_def = DeclarativeApp(
+        DeclarativeModule(
+            scan_values(mod_config),
+            global_=True,
+        ),
+        DeclarativeModule(
+            scan_factories(mod_plugins),
+            name="plugins",
+        ),
+        DeclarativeModule(
+            scan_factories(mod_impl),
+            imports=[NameModuleImport("plugins", reexport=True)],
+            global_=True,
+        ),
+        DeclarativeModule(
+            scan_factories(mod_abstract),
+        ),
+        agg_checks=[type_check(DataProvider)],
+    )
+
+    # This operation builds application instance and gets `AllCombinations` object
+    instance = app_def.build_instance()
     (all_combinations,) = instance.values_by_type(mod_abstract.AllCombinations)
 
     # Check initialized application.
