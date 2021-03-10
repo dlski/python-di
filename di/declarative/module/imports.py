@@ -15,6 +15,14 @@ class DirectModuleImport(ModuleImport):
 
 
 @dataclass
+class DirectModuleAssemblyImport(ModuleImport):
+    assembly: ModuleAssembly
+
+    def solve(self, known: Collection[Module]) -> ModuleAssembly:
+        return self.assembly
+
+
+@dataclass
 class NameModuleImport(ModuleImport):
     name: str
     reexport: bool = False
@@ -30,12 +38,14 @@ class NameModuleImport(ModuleImport):
         return ModuleAssembly(module=found[0])
 
 
-ModuleImportType = Union[Module, ModuleRelated, ModuleImport, str]
+ModuleImportType = Union[Module, ModuleRelated, ModuleAssembly, ModuleImport, str]
 
 
 def convert_module_import(module: ModuleImportType, reexport: bool) -> ModuleImport:
     if isinstance(module, ModuleImport):
         return module
+    if isinstance(module, ModuleAssembly):
+        return DirectModuleAssemblyImport(assembly=module)
     if isinstance(module, str):
         return NameModuleImport(name=module, reexport=reexport)
 
