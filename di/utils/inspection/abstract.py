@@ -106,7 +106,6 @@ class AbstractInspector:
 
     @classmethod
     def _all_concrete_bases(cls, obj: Type) -> Iterable[Type]:
-        print(obj.mro())
         for clazz in obj.mro():
             if clazz in BUILTIN_TYPES:
                 continue
