@@ -91,7 +91,6 @@ jobs:
       #----------------------------------------------
       #              setup environment
       #----------------------------------------------
-      - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
           python-version: 3.8
@@ -105,11 +104,13 @@ jobs:
         with:
           name: coverage
           path: coverage
-      - run: |
-          ls -la
+      - run: ls -la
+      - run: ls -la coverage/
+      - name: Combine coverage files
+        run: |
           coverage combine coverage
           coverage report
-          coverage xml --show-contexts
+          coverage xml
       #----------------------------------------------
       #             upload code coverage
       #----------------------------------------------
