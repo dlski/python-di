@@ -68,7 +68,6 @@ jobs:
       #----------------------------------------------
       - name: Run tests
         run: |
-          source .venv/bin/activate
           pytest --cov
         env:
           COVERAGE_FILE: coverage/.coverage.py${{ matrix.python-version }}
