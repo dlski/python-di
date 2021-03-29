@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "python-di"
-version = "1.0.5"
+version = "1.0.6"
 description = "Fully automatic dependency injection for python"
 authors = ["Damian Łukawski <damian@lukawscy.pl>"]
 license = "MIT"
@@ -19,6 +19,8 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
 [tool.poetry.dependencies]
