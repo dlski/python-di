@@ -12,6 +12,7 @@ on:
 
 jobs:
   lints:
+    name: Code lints
     runs-on: ubuntu-latest
     steps:
       #----------------------------------------------
@@ -40,7 +41,7 @@ jobs:
 
   tests:
     needs: [lints]
-    name: test python ${{ matrix.python-version }}
+    name: Test python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -76,7 +77,7 @@ jobs:
       #----------------------------------------------
       #             store code coverage
       #----------------------------------------------
-      - name: store coverage files
+      - name: Store coverage files
         uses: actions/upload-artifact@v2
         with:
           name: coverage
@@ -84,7 +85,7 @@ jobs:
 
   coverage-upload:
     needs: [tests]
-    name: coverage upload
+    name: Coverage upload
     runs-on: ubuntu-latest
     steps:
       #----------------------------------------------
@@ -94,31 +95,32 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - name: setup depdendencies
+      - name: Setup depdendencies
         run: pip install coverage
       #----------------------------------------------
       #            prepare coverage data
       #----------------------------------------------
-      - name: get coverage files
+      - name: Get coverage files
         uses: actions/download-artifact@v2
         with:
           name: coverage
           path: coverage
       - run: |
+          ls -la
           coverage combine coverage
           coverage report
           coverage xml --show-contexts
       #----------------------------------------------
       #             upload code coverage
       #----------------------------------------------
-      - name: upload coverage
+      - name: Upload coverage
         uses: codecov/codecov-action@v1
         with:
           file: ./coverage.xml
           fail_ci_if_error: true
 
   build-deploy:
-    name: build python
+    name: Build & deploy
     needs: [lints, tests]
     if: "success() && startsWith(github.ref, 'refs/tags/')"
     env:
