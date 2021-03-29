@@ -49,6 +49,8 @@ jobs:
         python-version: ['3.7', '3.8', '3.9']
     env:
       PYTHONPATH: .
+      OS: ${{ runner.os }}
+      PYTHON: ${{ matrix.python-version }}
 
     steps:
       #----------------------------------------------
@@ -104,11 +106,13 @@ jobs:
         with:
           name: coverage
           path: coverage
-      - run: ls -la
-      - run: ls -la coverage/
+      - run: |
+          pwd
+          ls -la
+          ls -la coverage/
       - name: Combine coverage files
         run: |
-          coverage combine coverage
+          coverage combine coverage/
           coverage report
           coverage xml
       #----------------------------------------------
