@@ -1,4 +1,9 @@
 # python-di
+
+[![CI](https://github.com/dlski/python-di/workflows/CI/badge.svg?event=push)](https://github.com/dlski/python-di/actions?query=event%3Apush+branch%3Amaster+workflow%3ACI)
+[![codecov](https://codecov.io/gh/dlski/python-di/branch/master/graph/badge.svg?token=DXIZA2T8W6)](https://codecov.io/gh/dlski/python-di)
+[![license](https://img.shields.io/github/license/dlski/python-di.svg)](https://github.com/dlski/python-di/blob/master/LICENSE)
+
 Fully automatic dependency injection for python 3.7, 3.8, 3.9, pypy3 using (not only) argument annotations / type hints.
 
 Corresponds to clean architecture patterns and ideal for business applications created in DDD / Hexagonal architecture flavour.
