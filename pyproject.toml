@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "python-di"
-version = "1.0.4"
+version = "1.0.5"
 description = "Fully automatic dependency injection for python"
 authors = ["Damian Łukawski <damian@lukawscy.pl>"]
 license = "MIT"
@@ -31,7 +31,7 @@ flake8 = "^3.8.3"
 flake8-isort = "^4.0.0"
 flake8-black = "^0.2.1"
 pytest = "^6.1.0"
-coverage = "^5.4"
+pytest-cov = "^2.11.1"
 
 [build-system]
 requires = ["poetry>=0.12"]
