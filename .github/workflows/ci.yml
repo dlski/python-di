@@ -154,8 +154,5 @@ jobs:
       #          build and deploy with poetry
       #----------------------------------------------
       - name: Build & deploy
-        # currently dry run
         run: |
-          poetry build
-#        run: |
-#          poetry publish --build
+          poetry publish --build
