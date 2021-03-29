@@ -120,7 +120,7 @@ jobs:
   build-deploy:
     name: build python
     needs: [lints, tests]
-    if: "success() && (startsWith(github.ref, 'refs/tags/')"
+    if: "success() && startsWith(github.ref, 'refs/tags/')"
     env:
       POETRY_PYPI_TOKEN_PYPI: "{{ secrets.PYPI_TOKEN }}"
 
