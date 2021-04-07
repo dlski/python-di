@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, Generic, List, TypeVar
 
 from di.utils.inspection import FactoryInspection
 
@@ -85,3 +85,22 @@ def test_factory_nested_fwd_ref_annotation_inspection():
     assert type_
     type_ = _ensure_list_and_get_arg(type_)
     assert type_ == SomeClass
+
+
+T = TypeVar("T")
+
+
+class _G(Generic[T]):
+    def __init__(self, x: str):
+        self.x = x
+
+
+class _X(_G[int]):
+    pass
+
+
+def test_generics():
+    inspection = FactoryInspection(_X)
+    assert inspection.args == ["x"]
+    assert inspection.args_annotations == {"x": str}
+    assert inspection.return_type == _X

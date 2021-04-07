@@ -24,13 +24,14 @@ class FactoryInspection:
     def __init__(self, _factory: Callable):
         self._factory = _factory
         self._factory_module = getattr(self._factory, "__module__", None)
-        self._signature = inspect.signature(_factory)
-        self._parameters: List[inspect.Parameter] = [
-            *self._signature.parameters.values()
+
+        target = _factory.__init__ if isinstance(_factory, type) else _factory
+        all_parameters: List[inspect.Parameter] = [
+            *inspect.signature(target).parameters.values()
         ]
-        self._annotations = get_type_hints(
-            _factory.__init__ if isinstance(_factory, type) else _factory
-        )
+        skip_parameters = 1 if self._factory != target else 0
+        self._parameters: List[inspect.Parameter] = all_parameters[skip_parameters:]
+        self._annotations = get_type_hints(target)
 
     @cached_property
     def optional_args(self) -> Collection[str]:
